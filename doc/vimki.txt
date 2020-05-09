@@ -17,21 +17,17 @@ CONTENT                                                     *vimki-contents*
     Bugs                : |vimki-bugs|
 
 ==============================================================================
-1. vimki Installation                                     *vimki-install*
+1. Vimki Installation                                     *vimki-install*
 
-    vimki should work with vim 6.0 or later versions.
+    |wimki| should work with Vim 6.0 or later versions. |vimki| should install
+    with any of existing plugin manager.
 
-    In order to install the plugin, place the vimki.vim file into a
-    plugin directory in your runtime path (please see |add-global-plugin|
-    and |'runtimepath'|).
-
+    For example, using vim-plug: >
+    	Plug 'mvertes/vimki'
+<
     |vimki| may be customized by setting variables, creating maps,
     and specifying event handlers.  Please see |vimki-customize| for
     more details.
-
-                                                           *vimki-auto-help*
-    This help file is automagically generated when the |vimki| script
-    is loaded for the first time.
 
 ==============================================================================
 2. vimki intro                                                   *vimki*
@@ -113,11 +109,6 @@ CONTENT                                                     *vimki-contents*
 >
       :syntax on | enable | off
 <
-    put the following line in a file called 'vimki.vim' in your syntax
-    directory (usually ~/.vim/syntax):
->
-      call VimkiSyntax()
-<
 
 4.2. Mapping documentation:      ~
 ---------------------------
@@ -184,6 +175,5 @@ CONTENT                                                     *vimki-contents*
 
     Issues and Pull-Requests are opened at https://github.com/mvertes/vimki
 
-==============================================================================
-
+------------------------------------------------------------------------------
 vim:tw=78:ts=8:ft=help:norl:

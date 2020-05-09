@@ -17,20 +17,20 @@ function! s:default(varname,value)
   endif
 endfunction
 
-call s:default('suffix','')
+call s:default('suffix', '')
 call s:default('home',"~/Wiki/HomePage".g:vimki_suffix)
 call s:default('home_dir',fnamemodify(g:vimki_home,':p:h'))
 
-call s:default('upper','A-Z')
-call s:default('lower','a-z')
-call s:default('other','0-9_')
+call s:default('upper', 'A-Z')
+call s:default('lower', 'a-z')
+call s:default('other', '0-9_')
 
-call s:default('autowrite',0)
+call s:default('autowrite', 0)
 
 call s:default('slash',has('unix') ? '/' : '\')
 
-call s:default('ignore','')
-call s:default('opendirs',0)
+call s:default('ignore', '')
+call s:default('opendirs', 0)
 
 " Functions
 function! s:VimkiInit()
