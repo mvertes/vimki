@@ -21,7 +21,7 @@ call s:default('home',"~/Wiki/HomePage".g:vimki_suffix)
 call s:default('home_dir',fnamemodify(g:vimki_home,':p:h'))
 
 call s:default('upper','A-Z')
-call s:default('lower','a-z')
+call s:default('lower','a-zàçéèếëîïñôöùûü')
 call s:default('other','0-9_')
 
 call s:default('autowrite',0)
