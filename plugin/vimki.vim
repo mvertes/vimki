@@ -1,16 +1,17 @@
 " vimki.vim
 
-if exists('loaded_vimki')
+if exists('g:vimki_loaded')
   finish
 endif
-let loaded_vimki = 1
+let g:vimki_loaded = 1
 
-let s:revision = "0.1"
-let s:save_cpo = &cpo
+let s:cpo_save = &cpo
 set cpo&vim
 
+let s:revision = "0.1"
+
 " Configuration
-function s:default(varname,value)
+function! s:default(varname,value)
   if !exists('g:vimki_'.a:varname)
     let g:vimki_{a:varname} = a:value
   endif
@@ -21,7 +22,7 @@ call s:default('home',"~/Wiki/HomePage".g:vimki_suffix)
 call s:default('home_dir',fnamemodify(g:vimki_home,':p:h'))
 
 call s:default('upper','A-Z')
-call s:default('lower','a-zàçéèếëîïñôöùûü')
+call s:default('lower','a-z')
 call s:default('other','0-9_')
 
 call s:default('autowrite',0)
@@ -32,7 +33,7 @@ call s:default('ignore','')
 call s:default('opendirs',0)
 
 " Functions
-function s:VimkiInit()
+function! s:VimkiInit()
   let upp = g:vimki_upper
   let low = g:vimki_lower
   let oth = g:vimki_other
@@ -58,18 +59,18 @@ function s:VimkiInit()
   au Syntax vimki call <SID>VimkiDefineSyntax()
 endfunction
 
-function s:VimkiBufferInit()
+function! s:VimkiBufferInit()
   call s:VimkiBufferMap()
 endfunction
 
-function s:VimkiDir()
+function! s:VimkiDir()
   if &filetype == 'vimki'
     return expand('%:p:h')
   endif
   return g:vimki_home_dir
 endfunction
 
-function s:VimkiDefineSyntax()
+function! s:VimkiDefineSyntax()
   syntax clear
   syntax case match
   execute 'syntax match VimkiWordNotFound "'.s:wordrx.'"'
@@ -77,27 +78,27 @@ function s:VimkiDefineSyntax()
   call s:VimkiDefineWords()
 
   " Define the default highlighting.
-  hi def link VimkiWordNotFound Error
+  hi def link VimkiWordNotFound Tag
   hi def link VimkiWord         Identifier
 
   let b:current_syntax = "vimki"
 endfunction
 
 " external interface
-function VimkiSyntax()
+function! VimkiSyntax()
   call s:VimkiDefineSyntax()
 endfunction
 
-function s:VimkiBuildIgnore()
+function! s:VimkiBuildIgnore()
   let s:ignorerx = ""
   let words=g:vimki_ignore
   while words != ""
-    let pos = stridx(words,",")
+    let pos = stridx(words, ",")
     if pos < 0
       let pos = strlen(words)
     endif
-    let word = strpart(words,0,pos)
-    let words = strpart(words,pos+1)
+    let word = strpart(words, 0, pos)
+    let words = strpart(words, pos+1)
     if s:ignorerx != ""
       let s:ignorerx = s:ignorerx.'\|'
     endif
@@ -105,19 +106,19 @@ function s:VimkiBuildIgnore()
   endwhile
 endfunction
 
-function s:VimkiDefineWords()
-  let files=globpath(s:VimkiDir(),"*")
+function! s:VimkiDefineWords()
+  let files=globpath(s:VimkiDir(), "*")
   while files != ""
-    let pos = stridx(files,"\n")
+    let pos = stridx(files, "\n")
     if pos < 0
       let pos = strlen(files)
     endif
-    let file = strpart(files,0,pos)
-    let files = strpart(files,pos+1)
+    let file = strpart(files, 0, pos)
+    let files = strpart(files, pos+1)
     let suffix_len = strlen(g:vimki_suffix)
     let file_len = strlen(file)
     if strpart(file, file_len-suffix_len, suffix_len) == g:vimki_suffix
-      let word=strpart(file,0,file_len-suffix_len)
+      let word=strpart(file, 0, file_len-suffix_len)
     else
       let word=""
     endif
@@ -130,7 +131,7 @@ function s:VimkiDefineWords()
   endwhile
 endfunction
 
-function s:VimkiEdit(file)
+function! s:VimkiEdit(file)
   if isdirectory(a:file) && !g:vimki_opendirs
     echo a:file." is a directory"
     return
@@ -141,24 +142,24 @@ function s:VimkiEdit(file)
   endif
 endfunction
 
-function s:VimkiAutowrite()
+function! s:VimkiAutowrite()
   if &filetype == 'vimki' && g:vimki_autowrite
     execute "update"
   endif
 endfunction
 
 " Autocommands
-function s:VimkiAutoCommands()
+function! s:VimkiAutoCommands()
   let dir = g:vimki_home_dir
   if !has('unix')
-    let dir = substitute(dir,'\','/','g')
+    let dir = substitute(dir, '\', '/', 'g')
   endif
   " 'setf vimki' is too weak -- we may have to override a wrong filetype:
   execute 'au BufNewFile,BufReadPost '.dir.'/*'.g:vimki_suffix.' setlocal filetype=vimki'
 endfunction
 
 " Maps
-function s:VimkiMap()
+function! s:VimkiMap()
   noremap <unique> <script> <SID>Home    :call <SID>Home()<CR>
   noremap <unique> <script> <SID>Index   :call <SID>Index()<CR>
   noremap <unique> <script> <SID>CR      :call <SID>CR()<CR>
@@ -195,7 +196,7 @@ function s:VimkiMap()
   endif
 endfunction
 
-function s:VimkiBufferMap()
+function! s:VimkiBufferMap()
   if exists('b:did_vimki_buffer_map')
     return
   endif
@@ -209,23 +210,23 @@ function s:VimkiBufferMap()
 endfunction
 
 " Menu items
-function s:VimkiMenu()
+function! s:VimkiMenu()
   noremenu <script> Plugin.Wiki\ Home    <SID>Home
   noremenu <script> Plugin.Wiki\ Index   <SID>Index
 endfunction
 
 " Functions suitable for global mapping
-function s:Home()
+function! s:Home()
   call s:VimkiAutowrite()
   call s:VimkiEdit(g:vimki_home)
 endfunction
 
-function s:Index()
+function! s:Index()
   call s:VimkiAutowrite()
   execute "e ".g:vimki_home_dir
 endfunction
 
-function s:Follow()
+function! s:Follow()
   let word = expand('<cword>')
   if word =~ s:wordrx
     let file = s:VimkiDir().g:vimki_slash.word.g:vimki_suffix
@@ -239,7 +240,7 @@ function s:Follow()
 endfunction
 
 " Functions suitable for buffer mapping
-function s:CR()
+function! s:CR()
   let word = expand('<cword>')
   if word =~ s:wordrx
     let file = s:VimkiDir().g:vimki_slash.word.g:vimki_suffix
@@ -250,24 +251,24 @@ function s:CR()
   endif
 endfunction
 
-function s:Close()
+function! s:Close()
   call s:VimkiAutowrite()
   execute "bd"
 endfunction
 
-function s:Reload()
+function! s:Reload()
   syntax clear
   au Syntax vimki call <SID>VimkiDefineSyntax()
   do Syntax vimki
 endfunction
 
-function s:SearchWord(cmd)
+function! s:SearchWord(cmd)
   let hl = &hls
   let lasts = @/
   let @/ = s:wordrx
   set nohls
   try
-    :silent exe 'normal ' a:cmd
+    :silent exe 'normal! ' a:cmd
   catch /Pattern not found/
     echoh WarningMsg
     echo "No WikiWord found."
@@ -277,18 +278,18 @@ function s:SearchWord(cmd)
   let &hls = hl
 endfunction
 
-function s:NextWord()
+function! s:NextWord()
   call s:SearchWord('n')
 endfunction
 
-function s:PrevWord()
+function! s:PrevWord()
   call s:SearchWord('N')
 endfunction
 
 " main
 call s:VimkiInit() 
 
-let &cpo = s:save_cpo
-finish
+let &cpo = s:cpo_save
+unlet s:cpo_save
 
-" vim: ts=8 sw=2
+" vim: sw=2 ts=2 et

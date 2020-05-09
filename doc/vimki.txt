@@ -12,14 +12,14 @@ CONTENT                                                     *vimki-contents*
 
     Installation        : |vimki-install|
     vimki intro         : |vimki|
-    Requirements        : |vimki-requirements|
     vimki commands      : |vimki-commands|
     Customization       : |vimki-customize|
     Bugs                : |vimki-bugs|
-    Todo list           : |vimki-todo|
 
 ==============================================================================
 1. vimki Installation                                     *vimki-install*
+
+    vimki should work with vim 6.0 or later versions.
 
     In order to install the plugin, place the vimki.vim file into a
     plugin directory in your runtime path (please see |add-global-plugin|
@@ -32,11 +32,6 @@ CONTENT                                                     *vimki-contents*
                                                            *vimki-auto-help*
     This help file is automagically generated when the |vimki| script
     is loaded for the first time.
-
-==============================================================================
-1.1. vimki requirements                              *vimki-requirements*
-
-    vimki should work with vim 6.0 or later versions.
 
 ==============================================================================
 2. vimki intro                                                   *vimki*
@@ -64,7 +59,7 @@ CONTENT                                                     *vimki-contents*
    which WikiWords are valid links. WikiWords without a corresponding
    file are highlighted as errors (otherwise it doesn't matter).
 
-   The default mappings are defined as follow (By default, <Leader>
+   The default mappings are defined as follow (by default, <Leader>
    stands for '\'. See |Leader| for more info) :
 
    <Leader>ww   - open the Wiki HomePage
@@ -95,18 +90,18 @@ CONTENT                                                     *vimki-contents*
 
 4.1. General configuration      ~
 --------------------------
-                                               *loaded_vimki*  *vimki-disable*
+                                               *vimki_loaded*  *vimki-disable*
     You can disable this script by putting the following line in your
-    |vimrc| >
-      let loaded_vimki = 1
+    |vimrc|: >
+      let vimki_loaded = 1
 <
 
     You can define your own color scheme for vimki highlighting, by
-    setting |highlight| on VimkiWord and VimkiWordNotFound groups. For
-    example:
+    setting |highlight| on VimkiWord and VimkiWordNotFound groups.
+    For example:
 >
-      highlight VimkiWord          guifg=darkcyan highlight
-      VimkiWordNotFound  guibg=Red guifg=Yellow
+      highlight VimkiWord          guifg=darkcyan
+      highlight VimkiWordNotFound  guibg=Red guifg=Yellow
 <
     When a wiki file is edited the 'filetype' and 'syntax' options
     are set to 'vimki'. You can use autocommands for this filetype to
@@ -149,43 +144,43 @@ CONTENT                                                     *vimki-contents*
 <
     vimki_suffix                                            *vimki_suffix*
       This variable contains a suffix appended to the names of your
-      Wikifiles.  default: ''
+      Wikifiles. Default: ''
 
     vimki_home                                                *vimki_home*
       This variable contains the filename of your Wiki HomePage.
-      default: $HOME/Wiki/HomePage + vimki_suffix
+      Default: $HOME/Wiki/HomePage + vimki_suffix
 
     vimki_home_dir                                        *vimki_home_dir*
       This variable contains the path of your Wiki directory.
-      default: the directory containing the file set in vimki_home.
+      Default: the directory containing the file set in vimki_home.
 
     vimki_upper                                              *vimki_upper*
       Upper case characters for WikiWords. Uses the syntax of [ ] atoms
       in regular expressions. 
-      default: 'A-Z'
+      Default: 'A-Z'
 
     vimki_lower                                              *vimki_lower*
       Lower case characters for WikiWords. Uses the syntax of [ ] atoms
       in regular expressions. 
-      default: 'a-z'
+      Default: 'a-z'
 
     vimki_other                                              *vimki_other*
       Non-letter characters for WikiWords. Uses the syntax of [ ] atoms
       in regular expressions. 
-      default: '0-9_'
+      Default: '0-9_'
 
     vimki_autowrite                                      *vimki_autowrite*
       If this is non-zero vimki always writes a Wiki file when it
       is closed by <Plug>VimkiClose or when you follow another WikiWord.
-      (The file is only written if it has been changed.)
+      (the file is only written if it has been changed.)
 
     vimki_ignore                                            *vimki_ignore*
       A comma-separated list of words you don't want vimki to
       highlight. Don't include any whitespace in this list.
-      default: ''
+      Default: ''
 
 ==============================================================================
-6. vimki bugs                                                    *vimki-bugs*
+5. vimki bugs                                                    *vimki-bugs*
 
     Issues and Pull-Requests are opened at https://github.com/mvertes/vimki
 
