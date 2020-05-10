@@ -55,7 +55,7 @@ CONTENT                                                     *vimki-contents*
    which WikiWords are valid links. WikiWords without a corresponding
    file are highlighted as errors (otherwise it doesn't matter).
 
-   The default mappings are defined as follow (by default, <Leader>
+   The efault mappings are defined as follow (by default, <Leader>
    stands for '\'. See |Leader| for more info) :
 
    <Leader>ww   - open the Wiki HomePage
