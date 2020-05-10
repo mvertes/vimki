@@ -65,15 +65,16 @@ Example:
 ```vim
         let vimki_home = "$HOME/MyWiki/HomePage"
 ```
-|variable|default|description|
-| `vimki_suffix`    | `""` | suffix appended to the names of WikiFiles |
+| variable          | default  | description                               |
+| ----------------- | ----     | ----------------------------------------- |
+| `vimki_suffix`    | `""`     | suffix appended to the names of WikiFiles |
 | `vimki_home`      | `$HOME/Wiki/HomePage + wimki_suffix` | path of Wiki HomePage |
 | `vimki_home_dir`  | dir of `vimki_home` |  path of Wiki directory |
-| `vimki_upper`     | `'A-Z'` | upper case characters for WikiWords |
-| `vimki_lower`     | `'a-z'` | lower case characters for WikiWords |
+| `vimki_upper`     | `'A-Z'`  | upper case characters for WikiWords |
+| `vimki_lower`     | `'a-z'`  | lower case characters for WikiWords |
 | `vimki_other`     | `'0-9_'` | non-letter characters for WikiWords |
-| `vimki_autowrite` | `1` | to automatically write a Wiki file on close |
-| `vimki_ignore`    | `""` | comma-separated list of words to ignore |
+| `vimki_autowrite` | `1`      | to automatically write a Wiki file on close |
+| `vimki_ignore`    | `""`     | comma-separated list of words to ignore |
 
 [vim-plug]: https://github.com/junegunn/vim-plug
 [WikiWords]: https://wiki.c2.com/?WikiWord
