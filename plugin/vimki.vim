@@ -20,13 +20,10 @@ endfunction
 call s:default('suffix', '')
 call s:default('home', '~/Wiki/HomePage' . g:vimki_suffix)
 call s:default('home_dir', fnamemodify(g:vimki_home, ':p:h'))
-
 call s:default('upper', 'A-Z')
 call s:default('lower', 'a-z')
 call s:default('other', '0-9_')
-
-call s:default('autowrite', 0)
-
+call s:default('autowrite', 1)
 call s:default('ignore', '')
 
 " Functions
@@ -140,15 +137,16 @@ endfunction
 
 function! s:VimkiAutowrite()
   if &filetype == 'vimki' && g:vimki_autowrite
+    if !isdirectory(g:vimki_home_dir)
+      call mkdir(g:vimki_home_dir, 'p')
+    endif
     execute 'update'
   endif
 endfunction
 
 " Autocommands
 function! s:VimkiAutoCommands()
-  let dir = g:vimki_home_dir
-  " 'setf vimki' is too weak -- we may have to override a wrong filetype:
-  execute 'au BufNewFile,BufReadPost ' . dir . '/*' . g:vimki_suffix . ' setlocal filetype=vimki'
+  execute 'au BufNewFile,BufReadPost ' . g:vimki_home_dir . '/*' . g:vimki_suffix . ' setlocal filetype=vimki'
 endfunction
 
 " Maps
