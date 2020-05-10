@@ -182,9 +182,6 @@ function! s:VimkiMap()
   if !hasmapto('<Plug>VimkiFollow')
     map <unique> <Leader>wf <Plug>VimkiFollow
   endif
-  if !hasmapto('<Plug>VimkiEdit')
-    map <unique> <Leader>we <Plug>VimkiEdit
-  endif
 endfunction
 
 function! s:VimkiBufferMap()

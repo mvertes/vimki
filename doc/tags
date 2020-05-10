@@ -1,8 +1,5 @@
-loaded_vimki	vimki.txt	/*loaded_vimki*
 vimki	vimki.txt	/*vimki*
-vimki-auto-help	vimki.txt	/*vimki-auto-help*
 vimki-bugs	vimki.txt	/*vimki-bugs*
-vimki-commands	vimki.txt	/*vimki-commands*
 vimki-contents	vimki.txt	/*vimki-contents*
 vimki-customize	vimki.txt	/*vimki-customize*
 vimki-disable	vimki.txt	/*vimki-disable*
@@ -10,12 +7,12 @@ vimki-install	vimki.txt	/*vimki-install*
 vimki-intro	vimki.txt	/*vimki-intro*
 vimki-mappings-override	vimki.txt	/*vimki-mappings-override*
 vimki-options	vimki.txt	/*vimki-options*
-vimki-requirements	vimki.txt	/*vimki-requirements*
 vimki.txt	vimki.txt	/*vimki.txt*
 vimki_autowrite	vimki.txt	/*vimki_autowrite*
 vimki_home	vimki.txt	/*vimki_home*
 vimki_home_dir	vimki.txt	/*vimki_home_dir*
 vimki_ignore	vimki.txt	/*vimki_ignore*
+vimki_loaded	vimki.txt	/*vimki_loaded*
 vimki_lower	vimki.txt	/*vimki_lower*
 vimki_other	vimki.txt	/*vimki_other*
 vimki_suffix	vimki.txt	/*vimki_suffix*

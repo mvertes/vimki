@@ -26,17 +26,35 @@ The default mappings, present from any buffer, are defined as follow
 | `<Leader>ww` | open the Wiki HomePage |
 | `<Leader>wi` | open the Wiki index    |
 | `<Leader>wf` | follow a WikiWord      |
-| `<Leader>we` | edit a Wiki file       |
 
 The following mappings are present when editing a Wiki file:
 
 | mapping             | action                               |
 | ------------------- | ------------------------------------ |
-|  `<Leader><Leader>` | close the file                       |
+|  `<Leader><Leader>` | close the file (back to previous)    |
 |  `<CR>`             | follow the WikiWord under the cursor |
 |  `<Tab>`            | move to the next WikiWord            |
 |  `<BS>`             | move to the previous WikiWord        |
 |  `<Leader>wr`       | reload WikiWords                     |
+
+Customization
+-------------
+
+Several variables are checked by the script to customize vimki
+behavior. You can set them using let in your `vimrc` file.
+Example:
+```vim
+        let vimki_home = "$HOME/MyWiki/HomePage"
+```
+|variable|default|description|
+| `vimki_suffix`    | `""` | suffix appended to the names of WikiFiles |
+| `vimki_home`      | `$HOME/Wiki/HomePage + wimki_suffix` | path of Wiki HomePage |
+| `vimki_home_dir`  | dir of `vimki_home` |  path of Wiki directory |
+| `vimki_upper`     | `'A-Z'` | upper case characters for WikiWords |
+| `vimki_lower`     | `'a-z'` | lower case characters for WikiWords |
+| `vimki_other`     | `'0-9_'` | non-letter characters for WikiWords |
+| `vimki_autowrite` | `1` | to automatically write a Wiki file on close |
+| `vimki_ignore`    | `""` | comma-separated list of words to ignore |
 
 [vim-plug]: https://github.com/junegunn/vim-plug
 [WikiWords]: https://wiki.c2.com/?WikiWord

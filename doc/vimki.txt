@@ -12,7 +12,6 @@ CONTENT                                                     *vimki-contents*
 
     Installation        : |vimki-install|
     vimki intro         : |vimki|
-    vimki commands      : |vimki-commands|
     Customization       : |vimki-customize|
     Bugs                : |vimki-bugs|
 
@@ -61,7 +60,6 @@ CONTENT                                                     *vimki-contents*
    <Leader>ww   - open the Wiki HomePage
    <Leader>wi   - open the Wiki index
    <Leader>wf   - follow a WikiWord (can be used in any buffer!)
-   <Leader>we   - edit a Wiki file
 
    The following mappings are present when editing a Wiki file:
 
@@ -75,16 +73,9 @@ CONTENT                                                     *vimki-contents*
    override those default mappings.
 
 ==============================================================================
-3. vimki commands	                                     *vimki-commands*
+3. vimki customization                                       *vimki-customize*
 
-    See |vimki-intro| for default mapping.
-
-    Currently vimki does not define any commands.
-
-==============================================================================
-4. vimki customization                                       *vimki-customize*
-
-4.1. General configuration      ~
+3.1. General configuration      ~
 --------------------------
                                                *vimki_loaded*  *vimki-disable*
     You can disable this script by putting the following line in your
@@ -110,7 +101,7 @@ CONTENT                                                     *vimki-contents*
       :syntax on | enable | off
 <
 
-4.2. Mapping documentation:      ~
+3.2. Mapping documentation:      ~
 ---------------------------
                                                    *vimki-mappings-override*
     By default, a global mapping is defined for some commands.
@@ -124,7 +115,7 @@ CONTENT                                                     *vimki-contents*
 >
       nmap \wh <Plug>VimkiHome
 <
-4.3. Options documentation:      ~
+3.3. Options documentation:      ~
 ---------------------------
                                                              *vimki-options*
     Several variables are checked by the script to customize vimki
@@ -164,6 +155,7 @@ CONTENT                                                     *vimki-contents*
       If this is non-zero vimki always writes a Wiki file when it
       is closed by <Plug>VimkiClose or when you follow another WikiWord.
       (the file is only written if it has been changed.)
+      Default: 1
 
     vimki_ignore                                            *vimki_ignore*
       A comma-separated list of words you don't want vimki to
@@ -171,7 +163,7 @@ CONTENT                                                     *vimki-contents*
       Default: ''
 
 ==============================================================================
-5. vimki bugs                                                    *vimki-bugs*
+4. vimki bugs                                                    *vimki-bugs*
 
     Issues and Pull-Requests are opened at https://github.com/mvertes/vimki
 
