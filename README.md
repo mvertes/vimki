@@ -17,11 +17,13 @@ I can (and do) throw everything at it: some random notes, my diary
 (a file per month), my contacts, my research notes and references, a
 catalog of all my stuff, books, films, music with the links to open when
 available, etc. All kind of data, loosely coupled or well structured,
-personal or professional, public or private (using `:X` vim command).
+personal or professional, public or private (using `:X` vim command), but
+always interlinked. And as for the brain, with a growing number of
+links with the time.
 
 The point of using vimki is to remove any friction in the flow of
 browsing, reading and writing. Everything you read is writable right now.
-to open a new file, I write a WikiWord, press `Return` with the cursor
+To open a new file, I write a WikiWord, press `Return` with the cursor
 on it, and I'm now editing it (or just press `,,` to go back, as I set
 `,` as `<Leader>` on my french keyboard). And all collisions (content
 already existing for a new WikiWord) are in fact happy accidents with
@@ -76,6 +78,17 @@ Example:
 | `vimki_autowrite` | `1`      | to automatically write a Wiki file on close |
 | `vimki_ignore`    | `""`     | comma-separated list of words to ignore |
 
+Bugs
+----
+
+Issues and pull-requests are opened at https://github.com/mvertes/vimki.
+
+Credits
+-------
+
+This plugin was inspired by [potwiki] and some other projects.
+
 [vim-plug]: https://github.com/junegunn/vim-plug
 [WikiWords]: https://wiki.c2.com/?WikiWord
 [WikiWikiWeb]: https://en.wikipedia.org/wiki/WikiWikiWeb
+[potwiki]: https://www.vim.org/scripts/script.php?script_id=1018
