@@ -25,9 +25,15 @@ The point of using vimki is to remove any friction in the flow of
 browsing, reading and writing. Everything you read is writable right now.
 To open a new file, I write a WikiWord, press `Return` with the cursor
 on it, and I'm now editing it (or just press `,,` to go back, as I set
-`,` as `<Leader>` on my french keyboard). And all collisions (content
-already existing for a new WikiWord) are in fact happy accidents with
-deep meaning.
+`,` as vim `<Leader>` key on my french keyboard). And all collisions
+(content already existing for a new WikiWord) are in fact happy accidents
+with deep meaning.
+
+The purpose of vimki is only to bring a wiki capability (quickly create
+and navigate in interconnected text files) to the editor, in the simplest
+and most straightforward manner. The goal is not to address document
+formatting, content generation or other features which can be better
+addressed by apropriate offline tools.
 
 Installation
 ------------
@@ -86,9 +92,10 @@ Issues and pull-requests are opened at https://github.com/mvertes/vimki.
 Credits
 -------
 
-This plugin was inspired by [potwiki] and some other projects.
+This plugin was inspired by [potwiki], [vimwiki] and some other projects.
 
 [vim-plug]: https://github.com/junegunn/vim-plug
 [WikiWords]: https://wiki.c2.com/?WikiWord
 [WikiWikiWeb]: https://en.wikipedia.org/wiki/WikiWikiWeb
 [potwiki]: https://www.vim.org/scripts/script.php?script_id=1018
+[vimwiki]: https://github.com/vimwiki/vimwiki
