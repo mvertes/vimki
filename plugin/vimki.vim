@@ -25,6 +25,7 @@ call s:default('lower', 'a-z')
 call s:default('other', '0-9_')
 call s:default('autowrite', 1)
 call s:default('ignore', '')
+call s:default('open', '!open')
 
 " Functions
 function! s:VimkiInit()
@@ -38,6 +39,8 @@ function! s:VimkiInit()
   " A VimkiWord must start with an upper case character and contain at
   " least one lower case and another upper case character in that order.
   let inner = '[' . upp . '][' . nlo . ']*[' . low . '][' . nup . ']*[' . upp. '][' . any . ']*'
+  " A link is word containing no space character and at least one / character
+  let s:wlinkrx = '\S*\/\S*'
   call s:VimkiBuildIgnore()
   if s:ignorerx != ''
     let s:wordrx = '\C\<\(\(' . s:ignorerx . '\)\>\)\@!' . inner . '\>'
@@ -67,12 +70,14 @@ function! s:VimkiDefineSyntax()
   syntax clear
   syntax case match
   execute 'syntax match VimkiWordNotFound "' . s:wordrx . '"'
+  execute 'syntax match VimLink "' . s:wlinkrx . '"'
 
   call s:VimkiDefineWords()
 
   " Define the default highlighting.
   hi def link VimkiWordNotFound Tag
   hi def link VimkiWord         Identifier
+  hi def link VimLink           Type
 
   let b:current_syntax = 'vimki'
 endfunction
@@ -224,10 +229,15 @@ endfunction
 " Functions suitable for buffer mapping
 function! s:CR()
   let word = expand('<cword>')
+  let Word = expand('<cWORD>')
   if word =~ s:wordrx
     let file = s:VimkiDir() . '/' . word . g:vimki_suffix
     call s:VimkiAutowrite()
     call s:VimkiEdit(file)
+  elseif Word =~ s:wlinkrx
+    execute "silent " . g:vimki_open . " " . Word . "&\n\n"
+    redraw!
+    echo g:vimki_open . " " . Word
   else
     execute "normal! \n"
   endif
