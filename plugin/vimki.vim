@@ -71,6 +71,7 @@ function! s:VimkiDefineSyntax()
   syntax case match
   execute 'syntax match VimkiWordNotFound "' . s:wordrx . '"'
   execute 'syntax match VimLink "' . s:wlinkrx . '"'
+  execute 'syntax match VimkiHeader /^\#\+.*$/'
 
   call s:VimkiDefineWords()
 
@@ -78,6 +79,7 @@ function! s:VimkiDefineSyntax()
   hi def link VimkiWordNotFound Tag
   hi def link VimkiWord         Identifier
   hi def link VimLink           Type
+  hi def link VimkiHeader       Underlined
 
   let b:current_syntax = 'vimki'
 endfunction
