@@ -20,9 +20,9 @@ endfunction
 call s:default('suffix', '')
 call s:default('home', '~/Wiki/HomePage' . g:vimki_suffix)
 call s:default('home_dir', fnamemodify(g:vimki_home, ':p:h'))
-call s:default('upper', 'A-Z')
+call s:default('upper', 'A-Z_')
 call s:default('lower', 'a-z')
-call s:default('other', '0-9_')
+call s:default('other', '0-9')
 call s:default('autowrite', 1)
 call s:default('ignore', '')
 call s:default('open', '!open')
@@ -79,7 +79,7 @@ function! s:VimkiDefineSyntax()
   hi def link VimkiWordNotFound Tag
   hi def link VimkiWord         Identifier
   hi def link VimLink           Type
-  hi def link VimkiHeader       Underlined
+  hi VimkiHeader cterm=underline ctermfg=blue
 
   let b:current_syntax = 'vimki'
 endfunction
