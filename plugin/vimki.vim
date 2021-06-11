@@ -8,7 +8,7 @@ let g:vimki_loaded = 1
 let s:cpo_save = &cpo
 set cpo&vim
 
-let s:revision = '0.1'
+let s:revision = '0.2'
 
 " Configuration
 function! s:default(varname,value)
@@ -18,35 +18,17 @@ function! s:default(varname,value)
 endfunction
 
 call s:default('suffix', '')
-call s:default('home', '~/Wiki/HomePage' . g:vimki_suffix)
+call s:default('home', '~/Wiki/home page' . g:vimki_suffix)
 call s:default('home_dir', fnamemodify(g:vimki_home, ':p:h'))
-call s:default('upper', 'A-Z')
-call s:default('lower', 'a-z')
-call s:default('other', '0-9_')
 call s:default('autowrite', 1)
-call s:default('ignore', '')
 call s:default('open', '!open')
 
 " Functions
 function! s:VimkiInit()
-  let upp = g:vimki_upper
-  let low = g:vimki_lower
-  let oth = g:vimki_other
-  let nup = low . oth
-  let nlo = upp . oth
-  let any = upp . nup
-
-  " A VimkiWord must start with an upper case character and contain at
-  " least one lower case and another upper case character in that order.
-  let inner = '[' . upp . '][' . nlo . ']*[' . low . '][' . nup . ']*[' . upp. '][' . any . ']*'
-  " A link is word containing no space character and at least one / character
-  let s:wlinkrx = '\S*\/\S*'
-  call s:VimkiBuildIgnore()
-  if s:ignorerx != ''
-    let s:wordrx = '\C\<\(\(' . s:ignorerx . '\)\>\)\@!' . inner . '\>'
-  else
-    let s:wordrx = '\C\<' . inner . '\>'
-  endif
+  " A link is containing no space character and at least one / character
+  let s:urlrx = '\S*\/\S*'
+  " A VimkiLink is between square brackets
+  let s:linkrx = '\[[^\]]*\]'
 
   call s:VimkiMap()
   call s:VimkiAutoCommands()
@@ -69,17 +51,17 @@ endfunction
 function! s:VimkiDefineSyntax()
   syntax clear
   syntax case match
-  execute 'syntax match VimkiWordNotFound "' . s:wordrx . '"'
-  execute 'syntax match VimLink "' . s:wlinkrx . '"'
+  execute 'syntax match VimkiLinkNotFound "' . s:linkrx . '"'
+  execute 'syntax match VimkiUrl "' . s:urlrx . '"'
   execute 'syntax match VimkiHeader /^\#\+.*$/'
 
-  call s:VimkiDefineWords()
+  call s:VimkiDefineLinks()
 
   " Define the default highlighting.
-  hi def link VimkiWordNotFound Tag
-  hi def link VimkiWord         Identifier
-  hi def link VimLink           Type
-  hi def link VimkiHeader       Underlined
+  hi def link VimkiLinkNotFound Tag
+  hi def link VimkiLink         Identifier
+  hi def link VimkiUrl          Type
+  hi VimkiHeader cterm=underline ctermfg=blue
 
   let b:current_syntax = 'vimki'
 endfunction
@@ -89,24 +71,7 @@ function! VimkiSyntax()
   call s:VimkiDefineSyntax()
 endfunction
 
-function! s:VimkiBuildIgnore()
-  let s:ignorerx = ''
-  let words=g:vimki_ignore
-  while words != ''
-    let pos = stridx(words, ',')
-    if pos < 0
-      let pos = strlen(words)
-    endif
-    let word = strpart(words, 0, pos)
-    let words = strpart(words, pos + 1)
-    if s:ignorerx != ''
-      let s:ignorerx = s:ignorerx . '\|'
-    endif
-    let s:ignorerx = s:ignorerx . word
-  endwhile
-endfunction
-
-function! s:VimkiDefineWords()
+function! s:VimkiDefineLinks()
   let files = globpath(s:VimkiDir(), '*')
   while files != ''
     let pos = stridx(files, "\n")
@@ -115,17 +80,10 @@ function! s:VimkiDefineWords()
     endif
     let file = strpart(files, 0, pos)
     let files = strpart(files, pos + 1)
-    let suffix_len = strlen(g:vimki_suffix)
-    let file_len = strlen(file)
-    if strpart(file, file_len - suffix_len, suffix_len) == g:vimki_suffix
-      let word=strpart(file, 0, file_len - suffix_len)
-    else
-      let word = ''
-    endif
-    let word = matchstr(word, s:wordrx . '\%$')
-    if word != '' 
+    let link = fnamemodify(file, ':t:r')
+    if link != ''
       if filereadable(file)
-        execute "syntax match VimkiWord " . '"\<' . word . '\>"'
+        execute "syntax match VimkiLink " . '"\c\[' . link  . '\]"'
       endif
     endif
   endwhile
@@ -164,8 +122,8 @@ function! s:VimkiMap()
   noremap <unique> <script> <SID>Follow  :call <SID>Follow()<CR>
   noremap <unique> <script> <SID>Close   :call <SID>Close()<CR>
   noremap <unique> <script> <SID>Reload  :call <SID>Reload()<CR>
-  noremap <unique> <script> <SID>NextWord :call <SID>NextWord()<CR>
-  noremap <unique> <script> <SID>PrevWord :call <SID>PrevWord()<CR>
+  noremap <unique> <script> <SID>NextLink :call <SID>NextLink()<CR>
+  noremap <unique> <script> <SID>PrevLink :call <SID>PrevLink()<CR>
   execute 'noremap <unique> <script> <SID>Edit ' .
         \ ':call <SID>VimkiAutowrite()<CR>' .
         \ ':e ' . g:vimki_home_dir . '/'
@@ -177,8 +135,8 @@ function! s:VimkiMap()
   map <unique> <script> <Plug>VimkiClose  <SID>Close
   map <unique> <script> <Plug>VimkiReload <SID>Reload
   map <unique> <script> <Plug>VimkiEdit   <SID>Edit
-  map <unique> <script> <Plug>VimkiNext   <SID>NextWord
-  map <unique> <script> <Plug>VimkiPrev   <SID>PrevWord
+  map <unique> <script> <Plug>VimkiNext   <SID>NextLink
+  map <unique> <script> <Plug>VimkiPrev   <SID>PrevLink
 
   if !hasmapto('<Plug>VimkiHome')
     map <unique> <Leader>ww <Plug>VimkiHome
@@ -196,9 +154,9 @@ function! s:VimkiBufferMap()
     return
   endif
   let b:did_vimki_buffer_map = 1
-  
+
   map <buffer> <silent> <Tab>            <Plug>VimkiNext
-  map <buffer> <silent> <BS>             <Plug>VimkiPrev
+  map <buffer> <silent> <S-Tab>          <Plug>VimkiPrev
   map <buffer>          <CR>             <Plug>VimkiCR
   map <buffer> <silent> <Leader><Leader> <Plug>VimkiClose
   map <buffer> <silent> <Leader>wr       <Plug>VimkiReload
@@ -216,33 +174,28 @@ function! s:Index()
 endfunction
 
 function! s:Follow()
-  let word = expand('<cword>')
-  if word =~ s:wordrx
-    let file = s:VimkiDir() . '/' . word . g:vimki_suffix
-    call s:VimkiAutowrite()
-    call s:VimkiEdit(file)
-  else
-    echoh WarningMsg
-    echo 'Cursor must be on a WikiWord to follow!'
-    echoh None
+  let ch = getline('.')[col('.') - 1]
+  if ch == '['
+    execute "normal! k"
   endif
+  execute "normal! /]yT["
+  let link = tolower(@")
+  let file = s:VimkiDir() . '/' . link . g:vimki_suffix
+  call s:VimkiAutowrite()
+  call s:VimkiEdit(file)
 endfunction
 
 " Functions suitable for buffer mapping
 function! s:CR()
-  let word = expand('<cword>')
-  let Word = expand('<cWORD>')
-  if word =~ s:wordrx
-    let file = s:VimkiDir() . '/' . word . g:vimki_suffix
-    call s:VimkiAutowrite()
-    call s:VimkiEdit(file)
-  elseif Word =~ s:wlinkrx
-    execute "silent " . g:vimki_open . " " . Word . "&\n\n"
-    redraw!
-    echo g:vimki_open . " " . Word
-  else
-    execute "normal! \n"
+  let ch = getline('.')[col('.') - 1]
+  if ch == ']'
+    execute "normal! k"
   endif
+  execute "normal! /]yT["
+  let link = tolower(@")
+  let file = s:VimkiDir() . '/' . link . g:vimki_suffix
+  call s:VimkiAutowrite()
+  call s:VimkiEdit(file)
 endfunction
 
 function! s:Close()
@@ -256,32 +209,32 @@ function! s:Reload()
   do Syntax vimki
 endfunction
 
-function! s:SearchWord(cmd)
+function! s:SearchLink(cmd)
   let hl = &hls
   let lasts = @/
-  let @/ = s:wordrx
+  let @/ = s:linkrx
   set nohls
   try
     :silent exe 'normal! ' a:cmd
   catch /Pattern not found/
     echoh WarningMsg
-    echo 'No WikiWord found.'
+    echo 'No WikiLink found.'
     echoh None
   endt
   let @/ = lasts
   let &hls = hl
 endfunction
 
-function! s:NextWord()
-  call s:SearchWord('n')
+function! s:NextLink()
+  call s:SearchLink('n')
 endfunction
 
-function! s:PrevWord()
-  call s:SearchWord('N')
+function! s:PrevLink()
+  call s:SearchLink('N')
 endfunction
 
 " Main
-call s:VimkiInit() 
+call s:VimkiInit()
 
 let &cpo = s:cpo_save
 unlet s:cpo_save
