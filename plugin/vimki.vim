@@ -18,7 +18,7 @@ function! s:default(varname,value)
 endfunction
 
 call s:default('suffix', '')
-call s:default('home', '~/Wiki/home page' . g:vimki_suffix)
+call s:default('home', '~/Wiki/home_page' . g:vimki_suffix)
 call s:default('home_dir', fnamemodify(g:vimki_home, ':p:h'))
 call s:default('autowrite', 1)
 call s:default('open', '!open')
@@ -46,6 +46,13 @@ function! s:VimkiDir()
     return expand('%:p:h')
   endif
   return g:vimki_home_dir
+endfunction
+
+function! s:Link2File(link)
+  let fname = tolower(a:link)
+  let fname = tr(fname, 'åäáàâãçéèêëîíìïôöóõòùûüúÿñ', 'aaaaaaceeeeiiiiooooouuuuyn')
+  let fname = substitute(fname, '\W\+', '_', 'g')
+  return fname
 endfunction
 
 function! s:VimkiDefineSyntax()
@@ -83,10 +90,23 @@ function! s:VimkiDefineLinks()
     let link = fnamemodify(file, ':t:r')
     if link != ''
       if filereadable(file)
-        execute "syntax match VimkiLink " . '"\c\[' . link  . '\]"'
+        execute "syntax match VimkiLink " . '"\c\[' . s:LinkMatch(link)  . '\]"'
       endif
     endif
   endwhile
+endfunction
+
+function! s:LinkMatch(link)
+  let m = substitute(a:link, '_', '\\W\\+', 'g')
+  let m = substitute(m, 'a', '[aåäáàâã]', 'g')
+  let m = substitute(m, 'c', '[cç]', 'g')
+  let m = substitute(m, 'e', '[eéèêë]', 'g')
+  let m = substitute(m, 'i', '[iîíìï]', 'g')
+  let m = substitute(m, 'o', '[oôöóõò]', 'g')
+  let m = substitute(m, 'u', '[uùûüú]', 'g')
+  let m = substitute(m, 'y', '[yÿ]', 'g')
+  let m = substitute(m, 'n', '[nñ]', 'g')
+  return m
 endfunction
 
 function! s:VimkiEdit(file)
@@ -179,23 +199,30 @@ function! s:Follow()
     execute "normal! k"
   endif
   execute "normal! /]yT["
-  let link = tolower(@")
-  let file = s:VimkiDir() . '/' . link . g:vimki_suffix
+  " let link = tolower(@")
+  " let file = s:VimkiDir() . '/' . link . g:vimki_suffix
+  let file = s:VimkiDir() . '/' . s:Link2File(@") . g:vimki_suffix
   call s:VimkiAutowrite()
   call s:VimkiEdit(file)
 endfunction
 
 " Functions suitable for buffer mapping
 function! s:CR()
-  let ch = getline('.')[col('.') - 1]
-  if ch == ']'
-    execute "normal! k"
+  let line = getline('.')
+  if line =~ s:linkrx
+    let ch = line[col('.') - 1]
+    if ch == ']'
+      execute "normal! k"
+    endif
+    execute "normal! /]yT["
+    " let link = tolower(@")
+    " let file = s:VimkiDir() . '/' . link . g:vimki_suffix
+    let file = s:VimkiDir() . '/' . s:Link2File(@") . g:vimki_suffix
+    call s:VimkiAutowrite()
+    call s:VimkiEdit(file)
+  else
+     execute "normal! \n"
   endif
-  execute "normal! /]yT["
-  let link = tolower(@")
-  let file = s:VimkiDir() . '/' . link . g:vimki_suffix
-  call s:VimkiAutowrite()
-  call s:VimkiEdit(file)
 endfunction
 
 function! s:Close()
