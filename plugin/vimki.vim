@@ -17,7 +17,7 @@ function! s:default(varname,value)
   endif
 endfunction
 
-call s:default('suffix', '')
+call s:default('suffix', '.md')
 call s:default('home', '~/Wiki/home_page' . g:vimki_suffix)
 call s:default('home_dir', fnamemodify(g:vimki_home, ':p:h'))
 call s:default('autowrite', 1)
