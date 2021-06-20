@@ -78,6 +78,17 @@ function! VimkiSyntax()
   call s:VimkiDefineSyntax()
 endfunction
 
+function! s:Rename(...) abort
+  let link = s:GetLink()
+  let ask = printf("vimki: rename '%s' to: ", link)
+  let to = input(ask)
+  redraw!
+  if empty(to)
+    return
+  endif
+  execute '!vimki rename "' . link . '" "' . to . '"'
+endfunction
+
 function! s:VimkiDefineLinks()
   let files = globpath(s:VimkiDir(), '*')
   while files != ''
@@ -142,6 +153,7 @@ function! s:VimkiMap()
   noremap <unique> <script> <SID>Follow  :call <SID>Follow()<CR>
   noremap <unique> <script> <SID>Close   :call <SID>Close()<CR>
   noremap <unique> <script> <SID>Reload  :call <SID>Reload()<CR>
+  noremap <unique> <script> <SID>Rename  :call <SID>Rename()<CR>
   noremap <unique> <script> <SID>NextLink :call <SID>NextLink()<CR>
   noremap <unique> <script> <SID>PrevLink :call <SID>PrevLink()<CR>
   execute 'noremap <unique> <script> <SID>Edit ' .
@@ -154,6 +166,7 @@ function! s:VimkiMap()
   map <unique> <script> <Plug>VimkiFollow <SID>Follow
   map <unique> <script> <Plug>VimkiClose  <SID>Close
   map <unique> <script> <Plug>VimkiReload <SID>Reload
+  map <unique> <script> <Plug>VimkiRename <SID>Rename
   map <unique> <script> <Plug>VimkiEdit   <SID>Edit
   map <unique> <script> <Plug>VimkiNext   <SID>NextLink
   map <unique> <script> <Plug>VimkiPrev   <SID>PrevLink
@@ -179,7 +192,8 @@ function! s:VimkiBufferMap()
   map <buffer> <silent> <S-Tab>          <Plug>VimkiPrev
   map <buffer>          <CR>             <Plug>VimkiCR
   map <buffer> <silent> <Leader><Leader> <Plug>VimkiClose
-  map <buffer> <silent> <Leader>wr       <Plug>VimkiReload
+  map <buffer> <silent> <Leader>wl       <Plug>VimkiReload
+  map <buffer> <silent> <Leader>wr       <Plug>VimkiRename
 endfunction
 
 " Functions suitable for global mapping
@@ -194,20 +208,13 @@ function! s:Index()
 endfunction
 
 function! s:Follow()
-  let ch = getline('.')[col('.') - 1]
-  if ch == '['
-    execute "normal! k"
-  endif
-  execute "normal! /]yT["
-  " let link = tolower(@")
-  " let file = s:VimkiDir() . '/' . link . g:vimki_suffix
-  let file = s:VimkiDir() . '/' . s:Link2File(@") . g:vimki_suffix
+  let link = s:GetLink()
+  let file = s:VimkiDir() . '/' . s:Link2File(link) . g:vimki_suffix
   call s:VimkiAutowrite()
   call s:VimkiEdit(file)
 endfunction
 
-" Functions suitable for buffer mapping
-function! s:CR()
+function! s:GetLink()
   let line = getline('.')
   if line =~ s:linkrx
     let ch = line[col('.') - 1]
@@ -215,14 +222,21 @@ function! s:CR()
       execute "normal! k"
     endif
     execute "normal! /]yT["
-    " let link = tolower(@")
-    " let file = s:VimkiDir() . '/' . link . g:vimki_suffix
-    let file = s:VimkiDir() . '/' . s:Link2File(@") . g:vimki_suffix
-    call s:VimkiAutowrite()
-    call s:VimkiEdit(file)
-  else
-     execute "normal! \n"
+    return @"
   endif
+  return ''
+endfunction
+
+" Functions suitable for buffer mapping
+function! s:CR()
+  let link = s:GetLink()
+  if empty(link)
+     execute "normal! \n"
+     return
+  endif
+  let file = s:VimkiDir() . '/' . s:Link2File(link) . g:vimki_suffix
+  call s:VimkiAutowrite()
+  call s:VimkiEdit(file)
 endfunction
 
 function! s:Close()
@@ -262,6 +276,8 @@ endfunction
 
 " Main
 call s:VimkiInit()
+
+command! VRemame call <SID>Rename()
 
 let &cpo = s:cpo_save
 unlet s:cpo_save
