@@ -241,7 +241,18 @@ endfunction
 
 function! s:Close()
   call s:VimkiAutowrite()
-  execute 'bd'
+  " execute 'bd'
+  let cnt = 0
+  for i in range(0, bufnr("$"))
+    if buflisted(i)
+      let cnt += 1
+    endif
+  endfor
+  if cnt <= 1
+    execute 'q'
+  else
+    execute 'bd'
+  endif
 endfunction
 
 function! s:Reload()
